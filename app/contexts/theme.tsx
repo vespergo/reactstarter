@@ -1,25 +1,30 @@
 'use client';
 
-import { createContext, useState, useContext } from 'react';
+import { createContext, useContext, useReducer } from 'react';
 
-import { DARK, LIGHT } from '../constants/theme';
+import { TOGGLE_THEME } from '@/app/actions/type';
+import { DARK, LIGHT } from '@/app/constants/theme';
+import { Action, ThemeContextType } from '@/app/types/theme';
 
-const ThemeContext = createContext({
+function themeReducer(state: string, action: Action) {
+  switch (action.type) {
+    case TOGGLE_THEME:
+      return state === LIGHT ? DARK : LIGHT;
+    default:
+      return state;
+  }
+}
+
+const ThemeContext = createContext<ThemeContextType>({
   theme: LIGHT,
-  onThemeToggle: function () {},
+  dispatch: function () {},
 });
 
 export function ThemeProvider({ children }: any) {
-  const [theme, setTheme] = useState(LIGHT);
-
-  const onThemeToggle = function () {
-    setTheme(function (prevTheme) {
-      return prevTheme === LIGHT ? DARK : LIGHT;
-    });
-  };
+  const [theme, dispatch] = useReducer(themeReducer, LIGHT);
 
   return (
-    <ThemeContext.Provider value={{ theme, onThemeToggle }}>
+    <ThemeContext.Provider value={{ theme, dispatch }}>
       {children}
     </ThemeContext.Provider>
   );

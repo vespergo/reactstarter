@@ -6,13 +6,18 @@ import {
   FormattedCustomersTable,
 } from '@/app/lib/definitions';
 import { useTheme } from '@/app/contexts/theme';
+import { TOGGLE_THEME } from '@/app/actions/type';
 
 export default async function CustomersTable({
   customers,
 }: {
   customers: FormattedCustomersTable[];
 }) {
-  const { theme, onThemeToggle } = useTheme();
+  const { theme, dispatch } = useTheme();
+
+  function onThemeToggle() {
+    dispatch({ type: TOGGLE_THEME });
+  }
 
   return (
     <div className="w-full">
